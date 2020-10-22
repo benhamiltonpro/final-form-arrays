@@ -9,7 +9,7 @@ const countBelow = (array, value) =>
 const removeBatch: Mutator<any> = (
   [name, indexes]: any[],
   state: MutableState<any>,
-  { changeValue }: Tools<any>
+  { changeValue, renameField }: Tools<any>
 ) => {
   const sortedIndexes: number[] = [...indexes]
   sortedIndexes.sort()
@@ -50,7 +50,7 @@ const removeBatch: Mutator<any> = (
         // shift all higher ones down
         const decrementedKey = `${name}[${fieldIndex -
           countBelow(sortedIndexes, fieldIndex)}]${tokens[2]}`
-        moveFieldState(newState, state.fields[key], decrementedKey)
+        moveFieldState(newState, state.fields[key], decrementedKey, renameField)
       }
     } else {
       newState.fields[key] = state.fields[key]

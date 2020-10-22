@@ -8,7 +8,7 @@ const TMP: string = 'tmp'
 const swap: Mutator<any> = (
   [name, indexA, indexB]: any[],
   state: MutableState<any>,
-  { changeValue }: Tools<any>
+  { changeValue, renameField }: Tools<any>
 ) => {
   if (indexA === indexB) {
     return
@@ -29,9 +29,9 @@ const swap: Mutator<any> = (
   const bPrefix = `${name}[${indexB}]`
   const tmpPrefix = `${name}[${TMP}]`
 
-  moveFields(name, aPrefix, TMP, state)
-  moveFields(name, bPrefix, indexA, state)
-  moveFields(name, tmpPrefix, indexB, state)
+  moveFields(name, aPrefix, TMP, state, renameField)
+  moveFields(name, bPrefix, indexA, state, renameField)
+  moveFields(name, tmpPrefix, indexB, state, renameField)
 
   restoreFunctions(state, backupState)
 }

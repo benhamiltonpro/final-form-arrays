@@ -4,21 +4,24 @@ import { getIn, setIn } from 'final-form'
 describe('swap', () => {
   const getOp = (from, to) => {
     const changeValue = jest.fn()
-    swap(['foo', from, to], { fields: {} }, { changeValue })
+    const renameField = jest.fn()
+    swap(['foo', from, to], { fields: {} }, { changeValue, renameField })
     return changeValue.mock.calls[0][2]
   }
 
   it('should do nothing if indexA and indexB are equal', () => {
     const changeValue = jest.fn()
-    const result = swap(['foo', 1, 1], { fields: {} }, { changeValue })
+    const renameField = jest.fn()
+    const result = swap(['foo', 1, 1], { fields: {} }, { changeValue, renameField })
     expect(result).toBeUndefined()
     expect(changeValue).not.toHaveBeenCalled()
   })
 
   it('should call changeValue once', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const state = { fields: {} }
-    const result = swap(['foo', 0, 2], state, { changeValue })
+    const result = swap(['foo', 0, 2], state, { changeValue, renameField })
     expect(result).toBeUndefined()
     expect(changeValue).toHaveBeenCalled()
     expect(changeValue).toHaveBeenCalledTimes(1)
@@ -52,6 +55,7 @@ describe('swap', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -85,7 +89,7 @@ describe('swap', () => {
         }
       }
     }
-    swap(['foo', 0, 2], state, { changeValue })
+    swap(['foo', 0, 2], state, { changeValue, renameField })
     expect(state).toEqual({
       formState: {
         values: {
@@ -128,6 +132,7 @@ describe('swap', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -202,7 +207,7 @@ describe('swap', () => {
         }
       }
     }
-    swap(['foo', 0, 2], state, { changeValue })
+    swap(['foo', 0, 2], state, { changeValue, renameField })
     expect(state).toEqual({
       formState: {
         values: {
@@ -286,6 +291,7 @@ describe('swap', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -323,7 +329,7 @@ describe('swap', () => {
         }
       }
     }
-    swap(['foo', 0, 2], state, { changeValue })
+    swap(['foo', 0, 2], state, { changeValue, renameField })
     expect(state.fields['foo[0]'].change()).toBe('foo[2]')
     expect(state.fields['foo[1]'].change()).toBe('foo[1]')
     expect(state.fields['foo[2]'].change()).toBe('foo[0]')

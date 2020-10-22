@@ -8,7 +8,7 @@ const TMP: string = 'tmp'
 const move: Mutator<any> = (
   [name, from, to]: any[],
   state: MutableState<any>,
-  { changeValue }: Tools<any>
+  { changeValue, renameField }: Tools<any>
 ) => {
   if (from === to) {
     return
@@ -26,27 +26,27 @@ const move: Mutator<any> = (
 
   // move this row to tmp index
   const fromPrefix = `${name}[${from}]`
-  moveFields(name, fromPrefix, TMP, state)
+  moveFields(name, fromPrefix, TMP, state, renameField)
 
   if (from < to) {
     // moving to a higher index
     // decrement all indices between from and to
     for (let i = from + 1; i <= to; i++) {
       const innerFromPrefix = `${name}[${i}]`
-      moveFields(name, innerFromPrefix, `${i - 1}`, state)
+      moveFields(name, innerFromPrefix, `${i - 1}`, state, renameField)
     }
   } else {
     // moving to a lower index
     // increment all indices between to and from
     for (let i = from - 1; i >= to; i--) {
       const innerFromPrefix = `${name}[${i}]`
-      moveFields(name, innerFromPrefix, `${i + 1}`, state)
+      moveFields(name, innerFromPrefix, `${i + 1}`, state, renameField)
     }
   }
 
   // move from tmp index to destination
   const tmpPrefix = `${name}[${TMP}]`
-  moveFields(name, tmpPrefix, to, state)
+  moveFields(name, tmpPrefix, to, state, renameField)
 
   restoreFunctions(state, backupState)
 }

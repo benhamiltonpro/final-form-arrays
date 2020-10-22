@@ -1,10 +1,16 @@
 // @flow
 import type { MutableState } from 'final-form'
 
+
 function moveFieldState(
   state: MutableState<any>,
   source: Object,
-  destKey: string
+  destKey: string,
+  renameField: (
+    state: MutableState<any>,
+    from: string,
+    to: string
+  ) => void
 ) {
   delete state.fields[source.name]
   state.fields[destKey] = {
@@ -27,6 +33,7 @@ function moveFieldState(
   if (!state.fields[destKey].focus) {
     delete state.fields[destKey].focus
   }
+  renameField(state, source.name, destKey);
 }
 
 export default moveFieldState

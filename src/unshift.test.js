@@ -4,6 +4,7 @@ import { getIn, setIn } from 'final-form'
 describe('unshift', () => {
   const getOp = value => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const resetFieldState = jest.fn()
     const state = {
       formState: {
@@ -24,12 +25,13 @@ describe('unshift', () => {
         }
       }
     }
-    unshift(['foo', value], state, { changeValue, resetFieldState })
+    unshift(['foo', value], state, { changeValue, renameField, resetFieldState })
     return changeValue.mock.calls[0][2]
   }
 
   it('should call changeValue once', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const resetFieldState = jest.fn()
     const state = {
       formState: {
@@ -52,7 +54,8 @@ describe('unshift', () => {
     }
     const result = unshift(['foo', 'bar'], state, {
       changeValue,
-      resetFieldState
+      resetFieldState,
+      renameField
     })
     expect(result).toBeUndefined()
     expect(changeValue).toHaveBeenCalled()
@@ -78,6 +81,7 @@ describe('unshift', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const resetFieldState = name => {
       state.fields[name].touched = false
     }
@@ -107,7 +111,8 @@ describe('unshift', () => {
     }
     const returnValue = unshift(['foo', 'NEWVALUE'], state, {
       changeValue,
-      resetFieldState
+      resetFieldState,
+      renameField
     })
     expect(returnValue).toBeUndefined()
     expect(state.formState.values.foo).not.toBe(array) // copied

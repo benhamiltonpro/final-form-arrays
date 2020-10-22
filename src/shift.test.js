@@ -4,6 +4,7 @@ import { getIn, setIn } from 'final-form'
 describe('shift', () => {
   it('should call changeValue once', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -23,7 +24,7 @@ describe('shift', () => {
         }
       }
     }
-    const result = shift(['foo'], state, { changeValue, getIn, setIn })
+    const result = shift(['foo'], state, { changeValue, renameField, getIn, setIn })
     expect(result).toBeUndefined()
     expect(changeValue).toHaveBeenCalled()
     expect(changeValue).toHaveBeenCalledTimes(1)
@@ -34,6 +35,7 @@ describe('shift', () => {
 
   it('should treat undefined like an empty array', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -42,7 +44,7 @@ describe('shift', () => {
       },
       fields: {}
     }
-    const returnValue = shift(['foo'], state, { changeValue, getIn, setIn })
+    const returnValue = shift(['foo'], state, { changeValue, renameField, getIn, setIn })
     expect(returnValue).toBeUndefined()
     const op = changeValue.mock.calls[0][2]
     const result = op(undefined)
@@ -58,6 +60,7 @@ describe('shift', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -92,7 +95,7 @@ describe('shift', () => {
         }
       }
     }
-    const returnValue = shift(['foo'], state, { changeValue, getIn, setIn })
+    const returnValue = shift(['foo'], state, { changeValue, renameField, getIn, setIn })
     expect(returnValue).toBe('a')
     expect(state.formState.values.foo).not.toBe(array) // copied
     expect(state).toEqual({

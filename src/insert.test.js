@@ -4,6 +4,7 @@ import { getIn, setIn } from 'final-form'
 describe('insert', () => {
   const getOp = (index, value) => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const resetFieldState = jest.fn()
     const state = {
       formState: {
@@ -24,12 +25,13 @@ describe('insert', () => {
         }
       }
     }
-    insert(['foo', index, value], state, { changeValue, resetFieldState })
+    insert(['foo', index, value], state, { changeValue, resetFieldState, renameField })
     return changeValue.mock.calls[0][2]
   }
 
   it('should call changeValue once', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const resetFieldState = jest.fn()
     const state = {
       formState: {
@@ -56,7 +58,8 @@ describe('insert', () => {
     }
     const result = insert(['foo', 0, 'bar'], state, {
       changeValue,
-      resetFieldState
+      resetFieldState,
+      renameField
     })
     expect(result).toBeUndefined()
     expect(changeValue).toHaveBeenCalled()
@@ -91,6 +94,7 @@ describe('insert', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const resetFieldState = name => {
       state.fields[name].touched = false
     }
@@ -125,7 +129,8 @@ describe('insert', () => {
     }
     const returnValue = insert(['foo', 1, 'NEWVALUE'], state, {
       changeValue,
-      resetFieldState
+      resetFieldState,
+      renameField
     })
     expect(returnValue).toBeUndefined()
     expect(state.formState.values.foo).not.toBe(array) // copied
@@ -171,6 +176,7 @@ describe('insert', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const resetFieldState = name => {
       state.fields[name].touched = false
     }
@@ -205,7 +211,8 @@ describe('insert', () => {
     }
     const returnValue = insert(['foo[0]', 1, 'NEWVALUE'], state, {
       changeValue,
-      resetFieldState
+      resetFieldState,
+      renameField
     })
     expect(returnValue).toBeUndefined()
     expect(state.formState.values.foo).not.toBe(array) // copied

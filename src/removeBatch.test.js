@@ -4,6 +4,7 @@ import { getIn, setIn } from 'final-form'
 describe('removeBatch', () => {
   const getOp = value => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -23,7 +24,7 @@ describe('removeBatch', () => {
         }
       }
     }
-    removeBatch(['foo', value], state, { changeValue })
+    removeBatch(['foo', value], state, { changeValue, renameField })
     return changeValue.mock.calls[0][2]
   }
 
@@ -34,6 +35,7 @@ describe('removeBatch', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     })
+    const renameField = jest.fn()
     function blur0() {}
     function change0() {}
     function focus0() {}
@@ -76,7 +78,7 @@ describe('removeBatch', () => {
         }
       }
     }
-    const result = removeBatch(['foo', [1, 2]], state, { changeValue })
+    const result = removeBatch(['foo', [1, 2]], state, { changeValue, renameField })
     expect(Array.isArray(result)).toBe(true)
     expect(result).toEqual(['two', 'three'])
     expect(changeValue).toHaveBeenCalled()
@@ -111,6 +113,7 @@ describe('removeBatch', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     })
+    const renameField = jest.fn()
     function blur0() {}
     function change0() {}
     function focus0() {}
@@ -153,7 +156,7 @@ describe('removeBatch', () => {
         }
       }
     }
-    const result = removeBatch(['foo', [2, 0]], state, { changeValue })
+    const result = removeBatch(['foo', [2, 0]], state, { changeValue, renameField })
     expect(Array.isArray(result)).toBe(true)
     expect(result).toEqual(['three', 'one'])
     expect(changeValue).toHaveBeenCalled()
@@ -216,6 +219,7 @@ describe('removeBatch', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     function blur0() {}
     function blur1() {}
     function blur2() {}
@@ -285,7 +289,7 @@ describe('removeBatch', () => {
         }
       }
     }
-    const returnValue = removeBatch(['foo', [1, 2]], state, { changeValue })
+    const returnValue = removeBatch(['foo', [1, 2]], state, { changeValue, renameField })
     expect(returnValue).toEqual(['b', 'c'])
     expect(state.formState.values.foo).not.toBe(array) // copied
     expect(state).toEqual({
@@ -339,6 +343,7 @@ describe('removeBatch', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     function blur0() {}
     function blur1() {}
     function blur2() {}
@@ -409,7 +414,8 @@ describe('removeBatch', () => {
       }
     }
     const returnValue = removeBatch(['foo[0]', [1, 2]], state, {
-      changeValue
+      changeValue,
+      renameField
     })
     expect(returnValue).toEqual(['b', 'c'])
     expect(state.formState.values.foo).not.toBe(array) // copied

@@ -17,7 +17,7 @@ function _extends() {
 }
 
 //      
-function moveFieldState(state, source, destKey) {
+function moveFieldState(state, source, destKey, renameField) {
   delete state.fields[source.name];
   state.fields[destKey] = _extends({}, source, {
     name: destKey,
@@ -42,6 +42,8 @@ function moveFieldState(state, source, destKey) {
   if (!state.fields[destKey].focus) {
     delete state.fields[destKey].focus;
   }
+
+  renameField(state, source.name, destKey);
 }
 
 //      
@@ -55,7 +57,8 @@ var insert = function insert(_ref, state, _ref2) {
       index = _ref[1],
       value = _ref[2];
   var changeValue = _ref2.changeValue,
-      resetFieldState = _ref2.resetFieldState;
+      resetFieldState = _ref2.resetFieldState,
+      renameField = _ref2.renameField;
   changeValue(state, name, function (array) {
     var copy = [].concat(array || []);
     copy.splice(index, 0, value);
@@ -77,7 +80,7 @@ var insert = function insert(_ref, state, _ref2) {
       if (fieldIndex >= index) {
         // inc index one higher
         var incrementedKey = name + "[" + (fieldIndex + 1) + "]" + tokens[2];
-        moveFieldState(state, backup[key], incrementedKey);
+        moveFieldState(state, backup[key], incrementedKey, renameField);
       }
     }
   });
@@ -95,12 +98,12 @@ var concat = function concat(_ref, state, _ref2) {
 
 //      
 
-function moveFields(name, matchPrefix, destIndex, state) {
+function moveFields(name, matchPrefix, destIndex, state, renameField) {
   Object.keys(state.fields).forEach(function (key) {
     if (key.substring(0, matchPrefix.length) === matchPrefix) {
       var suffix = key.substring(matchPrefix.length);
       var destKey = name + "[" + destIndex + "]" + suffix;
-      moveFieldState(state, state.fields[key], destKey);
+      moveFieldState(state, state.fields[key], destKey, renameField);
     }
   });
 }
@@ -134,7 +137,8 @@ var move = function move(_ref, state, _ref2) {
   var name = _ref[0],
       from = _ref[1],
       to = _ref[2];
-  var changeValue = _ref2.changeValue;
+  var changeValue = _ref2.changeValue,
+      renameField = _ref2.renameField;
 
   if (from === to) {
     return;
@@ -154,14 +158,14 @@ var move = function move(_ref, state, _ref2) {
   });
 
   var fromPrefix = name + "[" + from + "]";
-  moveFields(name, fromPrefix, TMP, state);
+  moveFields(name, fromPrefix, TMP, state, renameField);
 
   if (from < to) {
     // moving to a higher index
     // decrement all indices between from and to
     for (var i = from + 1; i <= to; i++) {
       var innerFromPrefix = name + "[" + i + "]";
-      moveFields(name, innerFromPrefix, "" + (i - 1), state);
+      moveFields(name, innerFromPrefix, "" + (i - 1), state, renameField);
     }
   } else {
     // moving to a lower index
@@ -169,13 +173,13 @@ var move = function move(_ref, state, _ref2) {
     for (var _i = from - 1; _i >= to; _i--) {
       var _innerFromPrefix = name + "[" + _i + "]";
 
-      moveFields(name, _innerFromPrefix, "" + (_i + 1), state);
+      moveFields(name, _innerFromPrefix, "" + (_i + 1), state, renameField);
     }
   } // move from tmp index to destination
 
 
   var tmpPrefix = name + "[" + TMP + "]";
-  moveFields(name, tmpPrefix, to, state);
+  moveFields(name, tmpPrefix, to, state, renameField);
   restoreFunctions(state, backupState);
 };
 
@@ -268,7 +272,7 @@ var remove = function remove(_ref, state, _ref2) {
         var decrementedKey = name + "[" + (fieldIndex - 1) + "]" + tokens[2];
 
         if (backup.fields[decrementedKey]) {
-          moveFieldState(state, backup.fields[key], decrementedKey);
+          moveFieldState(state, backup.fields[key], decrementedKey, renameField);
         } else {
           // take care of setting the correct change, blur, focus, validators on new field
           renameField(state, key, decrementedKey);
@@ -288,7 +292,8 @@ var countBelow = function countBelow(array, value) {
 var removeBatch = function removeBatch(_ref, state, _ref2) {
   var name = _ref[0],
       indexes = _ref[1];
-  var changeValue = _ref2.changeValue;
+  var changeValue = _ref2.changeValue,
+      renameField = _ref2.renameField;
   var sortedIndexes = [].concat(indexes);
   sortedIndexes.sort(); // remove duplicates
 
@@ -335,7 +340,7 @@ var removeBatch = function removeBatch(_ref, state, _ref2) {
         // not one of the removed indexes
         // shift all higher ones down
         var decrementedKey = name + "[" + (fieldIndex - countBelow(sortedIndexes, fieldIndex)) + "]" + tokens[2];
-        moveFieldState(newState, state.fields[key], decrementedKey);
+        moveFieldState(newState, state.fields[key], decrementedKey, renameField);
       }
     } else {
       newState.fields[key] = state.fields[key];
@@ -358,7 +363,8 @@ var swap = function swap(_ref, state, _ref2) {
   var name = _ref[0],
       indexA = _ref[1],
       indexB = _ref[2];
-  var changeValue = _ref2.changeValue;
+  var changeValue = _ref2.changeValue,
+      renameField = _ref2.renameField;
 
   if (indexA === indexB) {
     return;
@@ -380,9 +386,9 @@ var swap = function swap(_ref, state, _ref2) {
   var aPrefix = name + "[" + indexA + "]";
   var bPrefix = name + "[" + indexB + "]";
   var tmpPrefix = name + "[" + TMP$1 + "]";
-  moveFields(name, aPrefix, TMP$1, state);
-  moveFields(name, bPrefix, indexA, state);
-  moveFields(name, tmpPrefix, indexB, state);
+  moveFields(name, aPrefix, TMP$1, state, renameField);
+  moveFields(name, bPrefix, indexA, state, renameField);
+  moveFields(name, tmpPrefix, indexB, state, renameField);
   restoreFunctions(state, backupState);
 };
 

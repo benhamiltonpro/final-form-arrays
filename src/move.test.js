@@ -4,21 +4,24 @@ import { getIn, setIn } from 'final-form'
 describe('move', () => {
   const getOp = (from, to) => {
     const changeValue = jest.fn()
-    move(['foo', from, to], { fields: {} }, { changeValue })
+    const renameField = jest.fn()
+    move(['foo', from, to], { fields: {} }, { changeValue, renameField })
     return changeValue.mock.calls[0][2]
   }
 
   it('should do nothing if from and to are equal', () => {
     const changeValue = jest.fn()
-    const result = move(['foo', 1, 1], { fields: {} }, { changeValue })
+    const renameField = jest.fn()
+    const result = move(['foo', 1, 1], { fields: {} }, { changeValue, renameField })
     expect(result).toBeUndefined()
     expect(changeValue).not.toHaveBeenCalled()
   })
 
   it('should call changeValue once', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const state = { fields: {} }
-    const result = move(['foo', 0, 2], state, { changeValue })
+    const result = move(['foo', 0, 2], state, { changeValue, renameField })
     expect(result).toBeUndefined()
     expect(changeValue).toHaveBeenCalled()
     expect(changeValue).toHaveBeenCalledTimes(1)
@@ -52,6 +55,7 @@ describe('move', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -85,7 +89,7 @@ describe('move', () => {
         }
       }
     }
-    move(['foo', 0, 2], state, { changeValue })
+    move(['foo', 0, 2], state, { changeValue, renameField })
     expect(state).toEqual({
       formState: {
         values: {
@@ -128,6 +132,7 @@ describe('move', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -161,7 +166,7 @@ describe('move', () => {
         }
       }
     }
-    move(['foo', 2, 0], state, { changeValue })
+    move(['foo', 2, 0], state, { changeValue, renameField })
     expect(state).toEqual({
       formState: {
         values: {
@@ -204,6 +209,7 @@ describe('move', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -258,7 +264,7 @@ describe('move', () => {
         }
       }
     }
-    move(['foo', 0, 2], state, { changeValue })
+    move(['foo', 0, 2], state, { changeValue, renameField })
     expect(state).toMatchObject({
       formState: {
         values: {
@@ -325,6 +331,7 @@ describe('move', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -379,7 +386,7 @@ describe('move', () => {
         }
       }
     }
-    move(['foo', 2, 0], state, { changeValue })
+    move(['foo', 2, 0], state, { changeValue, renameField })
     expect(state).toMatchObject({
       formState: {
         values: {
@@ -447,6 +454,7 @@ describe('move', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -471,7 +479,7 @@ describe('move', () => {
         }
       }
     }
-    move(['foo', 0, 1], state, { changeValue })
+    move(['foo', 0, 1], state, { changeValue, renameField })
     expect(state).toMatchObject({
       formState: {
         values: {
@@ -507,6 +515,7 @@ describe('move', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     function blur0() {}
     function change0() {}
     function focus0() {}
@@ -580,7 +589,7 @@ describe('move', () => {
         }
       }
     }
-    move(['foo', 0, 1], state, { changeValue })
+    move(['foo', 0, 1], state, { changeValue, renameField })
     expect(state).toMatchObject({
       formState: {
         values: {
@@ -663,6 +672,7 @@ describe('move', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -702,7 +712,7 @@ describe('move', () => {
         }
       }
     }
-    move(['foo', 0, 2], state, { changeValue })
+    move(['foo', 0, 2], state, { changeValue, renameField })
     expect(state.fields['foo[0]'].change()).toBe('customerId1')
     expect(state.fields['foo[1]'].change()).toBe('customerId2')
     expect(state.fields['foo[2].abc'].change()).toBe('customerId0')

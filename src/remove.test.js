@@ -4,6 +4,7 @@ import { getIn, setIn } from 'final-form'
 describe('remove', () => {
   it('should call changeValue once', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -23,7 +24,7 @@ describe('remove', () => {
         }
       }
     }
-    const result = remove(['foo', 0], state, { changeValue, getIn, setIn })
+    const result = remove(['foo', 0], state, { changeValue, renameField, getIn, setIn })
     expect(result).toBeUndefined()
     expect(changeValue).toHaveBeenCalled()
     expect(changeValue).toHaveBeenCalledTimes(1)
@@ -34,6 +35,7 @@ describe('remove', () => {
 
   it('should treat undefined like an empty array', () => {
     const changeValue = jest.fn()
+    const renameField = jest.fn()
     const state = {
       formState: {
         values: {
@@ -42,7 +44,7 @@ describe('remove', () => {
       },
       fields: {}
     }
-    const returnValue = remove(['foo', 1], state, { changeValue, getIn, setIn })
+    const returnValue = remove(['foo', 1], state, { changeValue, renameField, getIn, setIn })
     expect(returnValue).toBeUndefined()
     const op = changeValue.mock.calls[0][2]
     const result = op(undefined)
@@ -58,6 +60,7 @@ describe('remove', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     function blur0() {}
     function change0() {}
     function focus0() {}
@@ -116,7 +119,7 @@ describe('remove', () => {
         }
       }
     }
-    const returnValue = remove(['foo', 1], state, { changeValue, getIn, setIn })
+    const returnValue = remove(['foo', 1], state, { changeValue, renameField, getIn, setIn })
     expect(returnValue).toBe('b')
     expect(state.formState.values.foo).not.toBe(array) // copied
     expect(state).toEqual({
@@ -169,6 +172,7 @@ describe('remove', () => {
       const after = mutate(before)
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
+    const renameField = jest.fn()
     function blur0() {}
     function change0() {}
     function focus0() {}
@@ -230,7 +234,8 @@ describe('remove', () => {
     const returnValue = remove(['foo[0]', 1], state, {
       changeValue,
       getIn,
-      setIn
+      setIn,
+      renameField
     })
     expect(returnValue).toBe('b')
     expect(state.formState.values.foo).not.toBe(array) // copied
@@ -334,10 +339,12 @@ describe('remove', () => {
       setIn
     })
     expect(returnValue).toBeUndefined()
-    expect(renameField).toHaveBeenCalledTimes(1)
+    expect(renameField).toHaveBeenCalledTimes(2)
     expect(renameField.mock.calls[0][0]).toEqual(state)
-    expect(renameField.mock.calls[0][1]).toEqual('foo[1].key')
-    expect(renameField.mock.calls[0][2]).toEqual('foo[0].key')
+    expect(renameField.mock.calls[0][1]).toEqual('foo[1]')
+    expect(renameField.mock.calls[0][2]).toEqual('foo[0]')
+    expect(renameField.mock.calls[1][1]).toEqual('foo[1].key')
+    expect(renameField.mock.calls[1][2]).toEqual('foo[0].key')
   })
 
   it('should remove value from the specified index with submitError if one error in array', () => {
