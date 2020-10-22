@@ -142,8 +142,6 @@ function restoreFunctions(state, backupState) {
   });
 }
 
-var TMP = 'tmp';
-
 var move = function move(_ref, state, _ref2) {
   var name = _ref[0],
       from = _ref[1],
@@ -169,7 +167,8 @@ var move = function move(_ref, state, _ref2) {
   });
 
   var fromPrefix = name + "[" + from + "]";
-  moveFields(name, fromPrefix, TMP, state, renameField);
+  var tempIndexAtEnd = (Object.keys(state.fields).length + 1).toString();
+  moveFields(name, fromPrefix, tempIndexAtEnd, state, renameField);
 
   if (from < to) {
     // moving to a higher index
@@ -189,7 +188,7 @@ var move = function move(_ref, state, _ref2) {
   } // move from tmp index to destination
 
 
-  var tmpPrefix = name + "[" + TMP + "]";
+  var tmpPrefix = name + "[" + tempIndexAtEnd + "]";
   moveFields(name, tmpPrefix, to, state, renameField);
   restoreFunctions(state, backupState);
 };
@@ -368,7 +367,7 @@ var shift = function shift(_ref, state, tools) {
   return remove([name, 0], state, tools);
 };
 
-var TMP$1 = 'tmp';
+var TMP = 'tmp';
 
 var swap = function swap(_ref, state, _ref2) {
   var name = _ref[0],
@@ -396,8 +395,8 @@ var swap = function swap(_ref, state, _ref2) {
 
   var aPrefix = name + "[" + indexA + "]";
   var bPrefix = name + "[" + indexB + "]";
-  var tmpPrefix = name + "[" + TMP$1 + "]";
-  moveFields(name, aPrefix, TMP$1, state, renameField);
+  var tmpPrefix = name + "[" + TMP + "]";
+  moveFields(name, aPrefix, TMP, state, renameField);
   moveFields(name, bPrefix, indexA, state, renameField);
   moveFields(name, tmpPrefix, indexB, state, renameField);
   restoreFunctions(state, backupState);
