@@ -26,7 +26,8 @@ const move: Mutator<any> = (
 
   // move this row to tmp index
   const fromPrefix = `${name}[${from}]`
-  moveFields(name, fromPrefix, TMP, state, renameField)
+  const maxParamLength = Object.keys(state.fields).length;
+  moveFields(name, fromPrefix, maxParamLength + 1, state, renameField)
 
   if (from < to) {
     // moving to a higher index
@@ -45,7 +46,7 @@ const move: Mutator<any> = (
   }
 
   // move from tmp index to destination
-  const tmpPrefix = `${name}[${TMP}]`
+  const tmpPrefix = `${name}[${maxParamLength + 1}]`
   moveFields(name, tmpPrefix, to, state, renameField)
 
   restoreFunctions(state, backupState)
