@@ -12,6 +12,7 @@ function moveFieldState(
     to: string
   ) => void
 ) {
+  renameField(state, source.name, destKey);
   delete state.fields[source.name]
   state.fields[destKey] = {
     ...source,
@@ -33,7 +34,6 @@ function moveFieldState(
   if (!state.fields[destKey].focus) {
     delete state.fields[destKey].focus
   }
-  renameField(state, source.name, destKey);
 }
 
 export default moveFieldState

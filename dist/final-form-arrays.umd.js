@@ -24,6 +24,7 @@
 
   //      
   function moveFieldState(state, source, destKey, renameField) {
+    renameField(state, source.name, destKey);
     delete state.fields[source.name];
     state.fields[destKey] = _extends({}, source, {
       name: destKey,
@@ -48,8 +49,6 @@
     if (!state.fields[destKey].focus) {
       delete state.fields[destKey].focus;
     }
-
-    renameField(state, source.name, destKey);
   }
 
   //      
