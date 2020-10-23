@@ -43,7 +43,13 @@ const remove: Mutator<any> = (
         delete state.fields[key]
         const decrementedKey = `${name}[${fieldIndex - 1}]${tokens[2]}`
         if (backup.fields[decrementedKey]) {
-          moveFieldState(state, backup.fields[key], decrementedKey, renameField)
+          moveFieldState(
+            state,
+            backup.fields[key],
+            decrementedKey,
+            renameField,
+            backup
+          )
         } else {
           // take care of setting the correct change, blur, focus, validators on new field
           renameField(state, key, decrementedKey)

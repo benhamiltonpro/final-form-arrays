@@ -24,7 +24,12 @@ describe('remove', () => {
         }
       }
     }
-    const result = remove(['foo', 0], state, { changeValue, renameField, getIn, setIn })
+    const result = remove(['foo', 0], state, {
+      changeValue,
+      renameField,
+      getIn,
+      setIn
+    })
     expect(result).toBeUndefined()
     expect(changeValue).toHaveBeenCalled()
     expect(changeValue).toHaveBeenCalledTimes(1)
@@ -44,7 +49,12 @@ describe('remove', () => {
       },
       fields: {}
     }
-    const returnValue = remove(['foo', 1], state, { changeValue, renameField, getIn, setIn })
+    const returnValue = remove(['foo', 1], state, {
+      changeValue,
+      renameField,
+      getIn,
+      setIn
+    })
     expect(returnValue).toBeUndefined()
     const op = changeValue.mock.calls[0][2]
     const result = op(undefined)
@@ -119,7 +129,12 @@ describe('remove', () => {
         }
       }
     }
-    const returnValue = remove(['foo', 1], state, { changeValue, renameField, getIn, setIn })
+    const returnValue = remove(['foo', 1], state, {
+      changeValue,
+      renameField,
+      getIn,
+      setIn
+    })
     expect(returnValue).toBe('b')
     expect(state.formState.values.foo).not.toBe(array) // copied
     expect(state).toEqual({
@@ -140,18 +155,18 @@ describe('remove', () => {
         },
         'foo[1]': {
           name: 'foo[1]',
-          blur: blur2,
-          change: change2,
-          focus: focus2,
+          blur: blur1,
+          change: change1,
+          focus: focus1,
           touched: true,
           error: 'C Error',
           lastFieldState: undefined
         },
         'foo[2]': {
           name: 'foo[2]',
-          blur: blur3,
-          change: change3,
-          focus: focus3,
+          blur: blur2,
+          change: change2,
+          focus: focus2,
           touched: false,
           error: 'D Error',
           lastFieldState: undefined
@@ -257,18 +272,18 @@ describe('remove', () => {
         },
         'foo[0][1]': {
           name: 'foo[0][1]',
-          blur: blur2,
-          change: change2,
-          focus: focus2,
+          blur: blur1,
+          change: change1,
+          focus: focus1,
           touched: true,
           error: 'C Error',
           lastFieldState: undefined
         },
         'foo[0][2]': {
           name: 'foo[0][2]',
-          blur: blur3,
-          change: change3,
-          focus: focus3,
+          blur: blur2,
+          change: change2,
+          focus: focus2,
           touched: false,
           error: 'D Error',
           lastFieldState: undefined

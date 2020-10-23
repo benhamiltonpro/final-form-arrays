@@ -78,7 +78,10 @@ describe('removeBatch', () => {
         }
       }
     }
-    const result = removeBatch(['foo', [1, 2]], state, { changeValue, renameField })
+    const result = removeBatch(['foo', [1, 2]], state, {
+      changeValue,
+      renameField
+    })
     expect(Array.isArray(result)).toBe(true)
     expect(result).toEqual(['two', 'three'])
     expect(changeValue).toHaveBeenCalled()
@@ -156,7 +159,10 @@ describe('removeBatch', () => {
         }
       }
     }
-    const result = removeBatch(['foo', [2, 0]], state, { changeValue, renameField })
+    const result = removeBatch(['foo', [2, 0]], state, {
+      changeValue,
+      renameField
+    })
     expect(Array.isArray(result)).toBe(true)
     expect(result).toEqual(['three', 'one'])
     expect(changeValue).toHaveBeenCalled()
@@ -173,9 +179,9 @@ describe('removeBatch', () => {
       fields: {
         'foo[0]': {
           name: 'foo[0]',
-          blur: blur1,
-          change: change1,
-          focus: focus1,
+          blur: blur0,
+          change: change0,
+          focus: focus0,
           touched: false,
           error: 'Second Error',
           lastFieldState: undefined
@@ -289,7 +295,10 @@ describe('removeBatch', () => {
         }
       }
     }
-    const returnValue = removeBatch(['foo', [1, 2]], state, { changeValue, renameField })
+    const returnValue = removeBatch(['foo', [1, 2]], state, {
+      changeValue,
+      renameField
+    })
     expect(returnValue).toEqual(['b', 'c'])
     expect(state.formState.values.foo).not.toBe(array) // copied
     expect(state).toEqual({
@@ -311,18 +320,18 @@ describe('removeBatch', () => {
         },
         'foo[1]': {
           name: 'foo[1]',
-          blur: blur3,
-          change: change3,
-          focus: focus3,
+          blur: blur1,
+          change: change1,
+          focus: focus1,
           touched: false,
           error: 'D Error',
           lastFieldState: undefined
         },
         'foo[2]': {
           name: 'foo[2]',
-          blur: blur4,
-          change: change4,
-          focus: focus4,
+          blur: blur2,
+          change: change2,
+          focus: focus2,
           touched: true,
           error: 'E Error',
           lastFieldState: undefined
@@ -438,18 +447,18 @@ describe('removeBatch', () => {
         },
         'foo[0][1]': {
           name: 'foo[0][1]',
-          blur: blur3,
-          change: change3,
-          focus: focus3,
+          blur: blur1,
+          change: change1,
+          focus: focus1,
           touched: false,
           error: 'D Error',
           lastFieldState: undefined
         },
         'foo[0][2]': {
           name: 'foo[0][2]',
-          blur: blur4,
-          change: change4,
-          focus: focus4,
+          blur: blur2,
+          change: change2,
+          focus: focus2,
           touched: true,
           error: 'E Error',
           lastFieldState: undefined

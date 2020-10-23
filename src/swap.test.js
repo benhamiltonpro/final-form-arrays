@@ -12,7 +12,11 @@ describe('swap', () => {
   it('should do nothing if indexA and indexB are equal', () => {
     const changeValue = jest.fn()
     const renameField = jest.fn()
-    const result = swap(['foo', 1, 1], { fields: {} }, { changeValue, renameField })
+    const result = swap(
+      ['foo', 1, 1],
+      { fields: {} },
+      { changeValue, renameField }
+    )
     expect(result).toBeUndefined()
     expect(changeValue).not.toHaveBeenCalled()
   })
@@ -330,9 +334,9 @@ describe('swap', () => {
       }
     }
     swap(['foo', 0, 2], state, { changeValue, renameField })
-    expect(state.fields['foo[0]'].change()).toBe('foo[2]')
+    expect(state.fields['foo[0]'].change()).toBe('foo[0]')
     expect(state.fields['foo[1]'].change()).toBe('foo[1]')
-    expect(state.fields['foo[2]'].change()).toBe('foo[0]')
+    expect(state.fields['foo[2]'].change()).toBe('foo[2]')
     expect(state.fields['foo[3]'].change()).toBe('foo[3]')
   })
 })

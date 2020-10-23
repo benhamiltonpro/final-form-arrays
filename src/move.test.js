@@ -12,7 +12,11 @@ describe('move', () => {
   it('should do nothing if from and to are equal', () => {
     const changeValue = jest.fn()
     const renameField = jest.fn()
-    const result = move(['foo', 1, 1], { fields: {} }, { changeValue, renameField })
+    const result = move(
+      ['foo', 1, 1],
+      { fields: {} },
+      { changeValue, renameField }
+    )
     expect(result).toBeUndefined()
     expect(changeValue).not.toHaveBeenCalled()
   })
@@ -516,12 +520,6 @@ describe('move', () => {
       state.formState.values = setIn(state.formState.values, name, after) || {}
     }
     const renameField = jest.fn()
-    function blur0() {}
-    function change0() {}
-    function focus0() {}
-    function blur1() {}
-    function change1() {}
-    function focus1() {}
     const state = {
       formState: {
         values: {
@@ -544,10 +542,7 @@ describe('move', () => {
         'foo[0].dog': {
           name: 'foo[0].dog',
           touched: true,
-          error: 'Error A Dog',
-          blur: blur0,
-          change: change0,
-          focus: focus0
+          error: 'Error A Dog'
         },
         'foo[0].cat': {
           name: 'foo[0].cat',
@@ -577,10 +572,7 @@ describe('move', () => {
         'foo[1].mouse': {
           name: 'foo[1].mouse',
           touched: true,
-          error: 'Error B Mickey',
-          blur: blur1,
-          change: change1,
-          focus: focus1
+          error: 'Error B Mickey'
         },
         'foo[1].deep.inside.axe': {
           name: 'foo[1].deep.inside.axe',
@@ -619,10 +611,7 @@ describe('move', () => {
           name: 'foo[0].mouse',
           touched: true,
           error: 'Error B Mickey',
-          lastFieldState: undefined,
-          blur: blur1,
-          change: change1,
-          focus: focus1
+          lastFieldState: undefined
         },
         'foo[0].deep.inside.axe': {
           name: 'foo[0].deep.inside.axe',
@@ -633,10 +622,7 @@ describe('move', () => {
           name: 'foo[1].dog',
           touched: true,
           error: 'Error A Dog',
-          lastFieldState: undefined,
-          blur: blur0,
-          change: change0,
-          focus: focus0
+          lastFieldState: undefined
         },
         'foo[1].cat': {
           name: 'foo[1].cat',
@@ -680,44 +666,40 @@ describe('move', () => {
         }
       },
       fields: {
-        'foo[0].abc': {
+        'foo[0]': {
           name: 'foo[0]',
           touched: true,
           error: 'Error A',
           lastFieldState: 'anything',
-          change: () => 'customerId0',
-          blur: () => 'foo[0].abc blur',
-          focus: () => 'foo[0].abc focus'
+          change: () => 'foo[0]'
         },
         'foo[1]': {
           name: 'foo[1]',
           touched: true,
           error: 'Error B',
           lastFieldState: 'anything',
-          change: () => 'customerId1'
+          change: () => 'foo[1]'
         },
         'foo[2]': {
           name: 'foo[2]',
           touched: false,
           error: 'Error C',
           lastFieldState: 'anything',
-          change: () => 'customerId2'
+          change: () => 'foo[2]'
         },
         'foo[3]': {
           name: 'foo[3]',
           touched: false,
           error: 'Error D',
           lastFieldState: 'anything',
-          change: () => 'customerId3'
+          change: () => 'foo[3]'
         }
       }
     }
     move(['foo', 0, 2], state, { changeValue, renameField })
-    expect(state.fields['foo[0]'].change()).toBe('customerId1')
-    expect(state.fields['foo[1]'].change()).toBe('customerId2')
-    expect(state.fields['foo[2].abc'].change()).toBe('customerId0')
-    expect(state.fields['foo[2].abc'].blur()).toBe('foo[0].abc blur')
-    expect(state.fields['foo[2].abc'].focus()).toBe('foo[0].abc focus')
-    expect(state.fields['foo[3]'].change()).toBe('customerId3')
+    expect(state.fields['foo[0]'].change()).toBe('foo[0]')
+    expect(state.fields['foo[1]'].change()).toBe('foo[1]')
+    expect(state.fields['foo[2]'].change()).toBe('foo[2]')
+    expect(state.fields['foo[3]'].change()).toBe('foo[3]')
   })
 })
